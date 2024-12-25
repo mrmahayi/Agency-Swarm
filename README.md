@@ -39,7 +39,15 @@ AZURE_OPENAI_API_VERSION=2024-02-15-preview
 AZURE_OPENAI_GPT4O_DEPLOYMENT=gpt-4o
 ```
 
-5. Run the tests:
+5. For GitHub Actions, add these secrets in your repository settings:
+   - Go to Settings > Secrets and variables > Actions
+   - Add the following secrets:
+     - `AZURE_OPENAI_KEY`
+     - `AZURE_OPENAI_ENDPOINT`
+     - `AZURE_OPENAI_API_VERSION`
+     - `AZURE_OPENAI_GPT4O_DEPLOYMENT`
+
+6. Run the tests:
 ```bash
 python -m pytest tests/
 ```
