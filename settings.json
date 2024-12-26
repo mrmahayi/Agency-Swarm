@@ -1,0 +1,1029 @@
+[
+    {
+        "name": "TaskOrchestratorAgent",
+        "id": null,
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 25000
+    },
+    {
+        "name": "ResearchAgent",
+        "id": null,
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 25000
+    },
+    {
+        "name": "VisionAnalysisAgent",
+        "id": null,
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 25000
+    },
+    {
+        "name": "DesktopInteractionAgent",
+        "id": null,
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 25000
+    },
+    {
+        "name": "WebAutomationAgent",
+        "id": null,
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 25000
+    },
+    {
+        "id": "asst_f8xjMHQrHUDz8J3qNLbvGLrz",
+        "created_at": 1735240471,
+        "description": "Manages tasks and coordinates other agents",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n# Task Orchestrator Agent\n\nYou are a Task Orchestrator agent responsible for managing tasks and coordinating with other agents. Your role is to help users manage their tasks efficiently and effectively.\n\n## Core Responsibilities\n\n1. Task Management\n   - Create new tasks\n   - Update existing tasks\n   - Delete tasks\n   - List and track tasks\n   - Assign tasks to appropriate agents\n\n2. Communication\n   - Coordinate with other agents\n   - Notify relevant agents about task updates\n   - Provide status updates to users\n\n3. Analytics\n   - Analyze task patterns\n   - Provide insights about task completion\n   - Track task performance metrics\n\n## Available Tools\n\n1. TaskManagementTool\n   - Create, update, delete, and list tasks\n   - Track task status and progress\n\n2. TaskAnalyticsTool\n   - Analyze task patterns and performance\n   - Generate insights and recommendations\n\n3. MessageAnalyticsTool\n   - Analyze user messages for intent\n   - Extract relevant entities from messages\n\n4. CommunicationTool\n   - Send notifications to other agents\n   - Coordinate task assignments\n\n## Interaction Guidelines\n\n1. Be professional and courteous in all communications\n2. Provide clear and concise responses\n3. Always confirm task creation, updates, and deletions\n4. Offer help when users seem unsure\n5. Use appropriate tools based on user requests\n\n## Command Examples\n\n- Create task: \"Create a task to [description]\"\n- Update task: \"Update task [ID] with [changes]\"\n- Delete task: \"Delete task [ID]\"\n- List tasks: \"List all tasks\"\n- Help: Show available commands\n\n## Error Handling\n\n1. If a command is unclear, ask for clarification\n2. If an error occurs, provide a clear explanation\n3. If a task cannot be completed, explain why and suggest alternatives\n\nRemember to maintain task context and provide helpful suggestions when appropriate. ",
+        "metadata": {},
+        "model": "gpt-4o",
+        "name": "TaskOrchestrator",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "TaskContextManager",
+                    "description": "A tool for managing task contexts, relationships, and agent assignments.\nTracks active tasks, dependencies, and task progress across the agency.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'create_task', 'update_task', 'get_task', 'assign_task', 'get_agent_tasks', 'add_dependency', 'get_dependencies'",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "task_data": {
+                                "anyOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Task data including: {'task_id': str, 'description': str, 'status': str, 'priority': int, 'deadline': str, 'metadata': Dict}",
+                                "title": "Task Data"
+                            },
+                            "agent_id": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Agent ID for task assignments and queries",
+                                "title": "Agent Id"
+                            },
+                            "task_id": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Task ID for specific task operations",
+                                "title": "Task Id"
+                            },
+                            "dependency_data": {
+                                "anyOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Dependency data: {'task_id': str, 'depends_on': List[str]}",
+                                "title": "Dependency Data"
+                            }
+                        },
+                        "required": [
+                            "operation"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "UpdateBatcher",
+                    "description": "A tool for batching updates and managing user communications efficiently.\nCollects updates and sends them in batches based on timing and priority.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'add_update', 'get_batch', 'clear_batch', 'force_send'",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "update_data": {
+                                "anyOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Update data including: {'content': str, 'priority': int, 'category': str, 'metadata': Dict}",
+                                "title": "Update Data"
+                            },
+                            "batch_settings": {
+                                "anyOf": [
+                                    {
+                                        "type": "object"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Batch settings including: {'max_batch_size': int, 'batch_timeout': int, 'min_priority': int}",
+                                "title": "Batch Settings"
+                            }
+                        },
+                        "required": [
+                            "operation"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SpeechTool",
+                    "description": "A tool for converting text to speech using Azure's Text-to-Speech service.\nSupports multiple voices and provides natural-sounding speech synthesis.",
+                    "parameters": {
+                        "properties": {
+                            "text": {
+                                "description": "The text to be converted to speech",
+                                "title": "Text",
+                                "type": "string"
+                            },
+                            "voice_name": {
+                                "default": "en-US-JennyNeural",
+                                "description": "The name of the voice to use for speech synthesis. Default is Jenny (female). Other options include en-US-GuyNeural (male)",
+                                "title": "Voice Name",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "text"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SpeechToTextTool",
+                    "description": "A tool for converting speech to text using Azure's Speech-to-Text service.\nSupports continuous speech recognition and provides real-time transcription.",
+                    "parameters": {
+                        "properties": {
+                            "duration": {
+                                "default": 10,
+                                "description": "The duration in seconds to listen for speech input",
+                                "title": "Duration",
+                                "type": "integer"
+                            },
+                            "language": {
+                                "default": "en-US",
+                                "description": "The language code for speech recognition. Default is US English.",
+                                "title": "Language",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SendMessage",
+                    "description": "Correctly extracted `SendMessage` with all the required parameters with correct types",
+                    "parameters": {
+                        "$defs": {
+                            "recipient": {
+                                "enum": [
+                                    "VisionAnalysis",
+                                    "DesktopInteraction",
+                                    "WebAutomation",
+                                    "Research"
+                                ],
+                                "title": "recipient",
+                                "type": "string"
+                            }
+                        },
+                        "properties": {
+                            "recipient": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/$defs/recipient"
+                                    }
+                                ],
+                                "description": "VisionAnalysis: Analyzes images and visual data\nDesktopInteraction: Controls keyboard, mouse, and clipboard interactions\nWebAutomation: Automates web browser interactions and manages files\nResearch: Gathers and analyzes information\n"
+                            },
+                            "my_primary_instructions": {
+                                "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
+                                "title": "My Primary Instructions",
+                                "type": "string"
+                            },
+                            "message": {
+                                "description": "Specify the task required for the recipient agent to complete. Focus on clarifying what the task entails, rather than providing exact instructions. Make sure to inlcude all the relevant information from the conversation needed to complete the task.",
+                                "title": "Message",
+                                "type": "string"
+                            },
+                            "message_files": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "A list of file IDs to be sent as attachments to this message. Only use this if you have the file ID that starts with 'file-'.",
+                                "examples": [
+                                    "file-1234",
+                                    "file-5678"
+                                ],
+                                "title": "Message Files"
+                            },
+                            "additional_instructions": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Additional context or instructions from the conversation needed by the recipient agent to complete the task.",
+                                "title": "Additional Instructions"
+                            }
+                        },
+                        "required": [
+                            "message",
+                            "my_primary_instructions",
+                            "recipient"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.7,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0
+    },
+    {
+        "id": "asst_HB7YS6vitPzHD7iV07MtGXMo",
+        "created_at": 1735240471,
+        "description": "Gathers and analyzes information",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n",
+        "metadata": {},
+        "model": "gpt-4o",
+        "name": "Research",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "TavilySearchTool",
+                    "description": "A tool for performing comprehensive online research using Tavily's search API.\nOptimized for LLMs and RAG applications.",
+                    "parameters": {
+                        "properties": {
+                            "query": {
+                                "description": "The search query or research question",
+                                "title": "Query",
+                                "type": "string"
+                            },
+                            "search_depth": {
+                                "default": "basic",
+                                "description": "The depth of search to perform: 'basic' for quick results, 'advanced' for comprehensive research",
+                                "title": "Search Depth",
+                                "type": "string"
+                            },
+                            "include_domains": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "List of domains to specifically include in the search",
+                                "title": "Include Domains"
+                            },
+                            "exclude_domains": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "List of domains to exclude from the search",
+                                "title": "Exclude Domains"
+                            },
+                            "max_results": {
+                                "default": 5,
+                                "description": "Maximum number of results to return",
+                                "title": "Max Results",
+                                "type": "integer"
+                            },
+                            "search_type": {
+                                "default": "search",
+                                "description": "Type of search to perform: 'search' for regular search, 'research' for comprehensive research",
+                                "title": "Search Type",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "query"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "BrowserTool",
+                    "description": "A tool for web automation tasks including navigation, form filling, data extraction,\nand interaction with web elements using Playwright.",
+                    "parameters": {
+                        "properties": {
+                            "action": {
+                                "description": "Action to perform: 'navigate', 'fill_form', 'extract_data', 'screenshot'",
+                                "title": "Action",
+                                "type": "string"
+                            },
+                            "url": {
+                                "default": null,
+                                "description": "URL to navigate to",
+                                "title": "Url",
+                                "type": "string"
+                            },
+                            "form_data": {
+                                "default": null,
+                                "description": "Dictionary containing form field names and values",
+                                "title": "Form Data",
+                                "type": "object"
+                            },
+                            "selector": {
+                                "default": null,
+                                "description": "CSS selector for element interaction or data extraction",
+                                "title": "Selector",
+                                "type": "string"
+                            },
+                            "data_type": {
+                                "default": null,
+                                "description": "Type of data to extract: 'text', 'links', 'images', etc.",
+                                "title": "Data Type",
+                                "type": "string"
+                            },
+                            "output_path": {
+                                "default": null,
+                                "description": "Path where to save screenshots or other output files",
+                                "title": "Output Path",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "action"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "PDFTool",
+                    "description": "A tool for PDF-related operations including generating PDFs from web pages\nand extracting text from existing PDFs.",
+                    "parameters": {
+                        "properties": {
+                            "url_or_file": {
+                                "description": "URL of the webpage to convert to PDF or path to the PDF file to process",
+                                "title": "Url Or File",
+                                "type": "string"
+                            },
+                            "operation": {
+                                "description": "Operation to perform: 'generate' for creating PDF from webpage, 'extract' for extracting text from PDF",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "output_path": {
+                                "default": null,
+                                "description": "Optional path where to save the generated PDF",
+                                "title": "Output Path",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "operation",
+                            "url_or_file"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "FileManagementTool",
+                    "description": "A tool for managing files and directories.\nProvides basic file operations like read, write, copy, move, and delete.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'read', 'write', 'copy', 'move', 'delete', 'list', 'exists', 'info'",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "path": {
+                                "description": "Path to the file or directory to operate on",
+                                "title": "Path",
+                                "type": "string"
+                            },
+                            "content": {
+                                "default": null,
+                                "description": "Content to write to file (for write operation)",
+                                "title": "Content",
+                                "type": "string"
+                            },
+                            "destination": {
+                                "default": null,
+                                "description": "Destination path (for copy/move operations)",
+                                "title": "Destination",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "operation",
+                            "path"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.7,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0
+    },
+    {
+        "id": "asst_JoIE24rze4gk39Uq67IQW4NA",
+        "created_at": 1735242370,
+        "description": "Analyzes images and visual data",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n",
+        "metadata": {},
+        "model": "gpt-4o",
+        "name": "VisionAnalysis",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "AzureVisionTool",
+                    "description": "A tool for analyzing images using Azure OpenAI GPT-4 Omni capabilities.\nCan be used for general image analysis or specific tasks like OCR.",
+                    "parameters": {
+                        "properties": {
+                            "image_path": {
+                                "description": "Path to the image file to analyze",
+                                "title": "Image Path",
+                                "type": "string"
+                            },
+                            "prompt": {
+                                "default": "What do you see in this image? Please describe the desktop contents in detail.",
+                                "description": "The prompt to send to GPT-4 Omni for image analysis",
+                                "title": "Prompt",
+                                "type": "string"
+                            },
+                            "mode": {
+                                "default": "analyze",
+                                "description": "Mode of operation: 'analyze' for general image analysis, 'ocr' for text extraction",
+                                "title": "Mode",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "image_path"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "CameraTool",
+                    "description": "A tool for capturing images from the webcam with optimized settings.",
+                    "parameters": {
+                        "properties": {
+                            "image_path": {
+                                "default": "camera_captures/capture.jpg",
+                                "description": "Path where the captured image will be saved.",
+                                "title": "Image Path",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SendMessage",
+                    "description": "Correctly extracted `SendMessage` with all the required parameters with correct types",
+                    "parameters": {
+                        "$defs": {
+                            "recipient": {
+                                "const": "DesktopInteraction",
+                                "enum": [
+                                    "DesktopInteraction"
+                                ],
+                                "title": "recipient",
+                                "type": "string"
+                            }
+                        },
+                        "properties": {
+                            "recipient": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/$defs/recipient"
+                                    }
+                                ],
+                                "description": "DesktopInteraction: Controls keyboard, mouse, and clipboard interactions\n"
+                            },
+                            "my_primary_instructions": {
+                                "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
+                                "title": "My Primary Instructions",
+                                "type": "string"
+                            },
+                            "message": {
+                                "description": "Specify the task required for the recipient agent to complete. Focus on clarifying what the task entails, rather than providing exact instructions. Make sure to inlcude all the relevant information from the conversation needed to complete the task.",
+                                "title": "Message",
+                                "type": "string"
+                            },
+                            "message_files": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "A list of file IDs to be sent as attachments to this message. Only use this if you have the file ID that starts with 'file-'.",
+                                "examples": [
+                                    "file-1234",
+                                    "file-5678"
+                                ],
+                                "title": "Message Files"
+                            },
+                            "additional_instructions": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Additional context or instructions from the conversation needed by the recipient agent to complete the task.",
+                                "title": "Additional Instructions"
+                            }
+                        },
+                        "required": [
+                            "message",
+                            "my_primary_instructions",
+                            "recipient"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.7,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0
+    },
+    {
+        "id": "asst_mIn5bsSzc4UCwq8pOH4aE4lB",
+        "created_at": 1735242370,
+        "description": "Controls keyboard, mouse, and clipboard interactions",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n",
+        "metadata": {},
+        "model": "gpt-4o",
+        "name": "DesktopInteraction",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "KeyboardTool",
+                    "description": "A tool for simulating human-like keyboard input using pyautogui.\nCan type text with variable speed and natural delays, press individual keys,\nor execute key combinations.",
+                    "parameters": {
+                        "properties": {
+                            "text": {
+                                "default": "",
+                                "description": "Text to type or key(s) to press (e.g., 'Hello' or 'enter' or 'ctrl+c')",
+                                "title": "Text",
+                                "type": "string"
+                            },
+                            "action": {
+                                "default": "type",
+                                "description": "Action to perform: 'type' for typing text, 'press' for pressing keys, 'hotkey' for key combinations",
+                                "title": "Action",
+                                "type": "string"
+                            },
+                            "typing_speed": {
+                                "default": [
+                                    0.08,
+                                    0.15
+                                ],
+                                "description": "Range for random delay between keystrokes in seconds (min, max)",
+                                "items": {},
+                                "title": "Typing Speed",
+                                "type": "array"
+                            },
+                            "pause_range": {
+                                "default": [
+                                    0.2,
+                                    0.5
+                                ],
+                                "description": "Range for random pauses between words in seconds (min, max)",
+                                "items": {},
+                                "title": "Pause Range",
+                                "type": "array"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "ClickTool",
+                    "description": "A tool for clicking at specific coordinates on the desktop using pyautogui.\nCan perform left click, right click, or double click at the specified location.",
+                    "parameters": {
+                        "properties": {
+                            "x": {
+                                "description": "X coordinate for the click location",
+                                "title": "X",
+                                "type": "integer"
+                            },
+                            "y": {
+                                "description": "Y coordinate for the click location",
+                                "title": "Y",
+                                "type": "integer"
+                            },
+                            "click_type": {
+                                "default": "left",
+                                "description": "Type of click to perform: 'left', 'right', or 'double'",
+                                "title": "Click Type",
+                                "type": "string"
+                            },
+                            "duration": {
+                                "default": 0.2,
+                                "description": "Duration of mouse movement to the target location (in seconds)",
+                                "title": "Duration",
+                                "type": "number"
+                            }
+                        },
+                        "required": [
+                            "x",
+                            "y"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "ClipboardTool",
+                    "description": "A tool for managing clipboard operations with support for text, images, and files.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'copy', 'paste', or 'clear'",
+                                "enum": [
+                                    "copy",
+                                    "paste",
+                                    "clear"
+                                ],
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "content_type": {
+                                "default": "text",
+                                "description": "Type of content to copy/paste: 'text', 'image', or 'file'",
+                                "enum": [
+                                    "text",
+                                    "image",
+                                    "file"
+                                ],
+                                "title": "Content Type",
+                                "type": "string"
+                            },
+                            "content": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Content to copy (for copy operation)",
+                                "title": "Content"
+                            },
+                            "file_path": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Path to save pasted image or file path to copy",
+                                "title": "File Path"
+                            }
+                        },
+                        "required": [
+                            "operation"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.7,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0
+    },
+    {
+        "id": "asst_9YBbJ74FhstbzIQ4pSJ1sdVK",
+        "created_at": 1735242371,
+        "description": "Automates web browser interactions and manages files",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n",
+        "metadata": {},
+        "model": "gpt-4o",
+        "name": "WebAutomation",
+        "object": "assistant",
+        "tools": [
+            {
+                "function": {
+                    "name": "BrowserTool",
+                    "description": "A tool for web automation tasks including navigation, form filling, data extraction,\nand interaction with web elements using Playwright.",
+                    "parameters": {
+                        "properties": {
+                            "action": {
+                                "description": "Action to perform: 'navigate', 'fill_form', 'extract_data', 'screenshot'",
+                                "title": "Action",
+                                "type": "string"
+                            },
+                            "url": {
+                                "default": null,
+                                "description": "URL to navigate to",
+                                "title": "Url",
+                                "type": "string"
+                            },
+                            "form_data": {
+                                "default": null,
+                                "description": "Dictionary containing form field names and values",
+                                "title": "Form Data",
+                                "type": "object"
+                            },
+                            "selector": {
+                                "default": null,
+                                "description": "CSS selector for element interaction or data extraction",
+                                "title": "Selector",
+                                "type": "string"
+                            },
+                            "data_type": {
+                                "default": null,
+                                "description": "Type of data to extract: 'text', 'links', 'images', etc.",
+                                "title": "Data Type",
+                                "type": "string"
+                            },
+                            "output_path": {
+                                "default": null,
+                                "description": "Path where to save screenshots or other output files",
+                                "title": "Output Path",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "action"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "FileManagementTool",
+                    "description": "A tool for managing files and directories.\nProvides basic file operations like read, write, copy, move, and delete.",
+                    "parameters": {
+                        "properties": {
+                            "operation": {
+                                "description": "Operation to perform: 'read', 'write', 'copy', 'move', 'delete', 'list', 'exists', 'info'",
+                                "title": "Operation",
+                                "type": "string"
+                            },
+                            "path": {
+                                "description": "Path to the file or directory to operate on",
+                                "title": "Path",
+                                "type": "string"
+                            },
+                            "content": {
+                                "default": null,
+                                "description": "Content to write to file (for write operation)",
+                                "title": "Content",
+                                "type": "string"
+                            },
+                            "destination": {
+                                "default": null,
+                                "description": "Destination path (for copy/move operations)",
+                                "title": "Destination",
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "operation",
+                            "path"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "SendMessage",
+                    "description": "Correctly extracted `SendMessage` with all the required parameters with correct types",
+                    "parameters": {
+                        "$defs": {
+                            "recipient": {
+                                "const": "Research",
+                                "enum": [
+                                    "Research"
+                                ],
+                                "title": "recipient",
+                                "type": "string"
+                            }
+                        },
+                        "properties": {
+                            "recipient": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/$defs/recipient"
+                                    }
+                                ],
+                                "description": "Research: Gathers and analyzes information\n"
+                            },
+                            "my_primary_instructions": {
+                                "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
+                                "title": "My Primary Instructions",
+                                "type": "string"
+                            },
+                            "message": {
+                                "description": "Specify the task required for the recipient agent to complete. Focus on clarifying what the task entails, rather than providing exact instructions. Make sure to inlcude all the relevant information from the conversation needed to complete the task.",
+                                "title": "Message",
+                                "type": "string"
+                            },
+                            "message_files": {
+                                "anyOf": [
+                                    {
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "type": "array"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "A list of file IDs to be sent as attachments to this message. Only use this if you have the file ID that starts with 'file-'.",
+                                "examples": [
+                                    "file-1234",
+                                    "file-5678"
+                                ],
+                                "title": "Message Files"
+                            },
+                            "additional_instructions": {
+                                "anyOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "null"
+                                    }
+                                ],
+                                "default": null,
+                                "description": "Additional context or instructions from the conversation needed by the recipient agent to complete the task.",
+                                "title": "Additional Instructions"
+                            }
+                        },
+                        "required": [
+                            "message",
+                            "my_primary_instructions",
+                            "recipient"
+                        ],
+                        "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            }
+        ],
+        "response_format": "auto",
+        "temperature": 0.7,
+        "tool_resources": {
+            "code_interpreter": null,
+            "file_search": null
+        },
+        "top_p": 1.0
+    }
+]

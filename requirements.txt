@@ -14,4 +14,10 @@ python-logging==0.4.9.6
 prometheus-client==0.17.1
 pytest==7.4.3
 pytest-cov==4.1.0
-gunicorn==21.2.0 
+gunicorn==21.2.0
+matplotlib
+pyautogui
+requests
+selenium
+tavily-python
+pypdf 

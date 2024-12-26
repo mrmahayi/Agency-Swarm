@@ -1,16 +1,17 @@
 import os
 from agency_swarm import Agent
-from .tools import AzureVisionTool, CameraTool, VisualizationTool, ScreenshotTool
+from .tools.AzureVisionTool import AzureVisionTool
+from .tools.CameraTool import CameraTool
 
 class VisionAnalysisAgent(Agent):
-    """Vision Analysis Agent responsible for image processing and analysis."""
+    """Vision Analysis Agent responsible for analyzing images and visual data."""
     
     def __init__(self):
         super().__init__(
             name="VisionAnalysis",
-            description="Processes and analyzes visual content",
+            description="Analyzes images and visual data",
             instructions="./instructions.md",
-            tools=[AzureVisionTool, CameraTool, VisualizationTool, ScreenshotTool],
+            tools=[AzureVisionTool, CameraTool],
             model=os.getenv("AZURE_OPENAI_GPT4O_DEPLOYMENT"),
             temperature=0.7,
             max_prompt_tokens=25000
@@ -18,16 +19,10 @@ class VisionAnalysisAgent(Agent):
         
     def analyze_image(self, image_path):
         """Analyze an image."""
-        return self.tools["AzureVisionTool"].run({"operation": "analyze", "image_path": image_path})
+        tool = AzureVisionTool(image_path=image_path)
+        return tool.run()
         
-    def capture_image(self):
+    def capture_image(self, camera_id=0, save_path=None):
         """Capture an image using the camera."""
-        return self.tools["CameraTool"].run({"operation": "capture"})
-
-    def create_visualization(self, visualization_type):
-        """Create a visualization."""
-        return self.tools["VisualizationTool"].run({"visualization_type": visualization_type})
-
-    def take_screenshot(self):
-        """Take a screenshot of the desktop."""
-        return self.tools["ScreenshotTool"].run()
+        tool = CameraTool(camera_id=camera_id, save_path=save_path)
+        return tool.run()
