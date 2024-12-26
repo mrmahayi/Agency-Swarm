@@ -20,4 +20,5 @@ pyautogui
 requests
 selenium
 tavily-python
-pypdf 
+pypdf
+pyreadline3 
