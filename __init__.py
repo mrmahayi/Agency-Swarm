@@ -1,1 +1,5 @@
-from .agents.desktop_vision_agent import DesktopVisionAgent
+from agents.TaskOrchestrator.agent import TaskOrchestratorAgent
+from agents.Research.agent import ResearchAgent
+from agents.VisionAnalysis.agent import VisionAnalysisAgent
+from agents.WebAutomation.agent import WebAutomationAgent
+from agents.DesktopInteraction.agent import DesktopInteractionAgent

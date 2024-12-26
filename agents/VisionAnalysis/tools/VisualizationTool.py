@@ -6,8 +6,17 @@ import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 from datetime import datetime
-from tools.database_manager import DatabaseManager
 import os
+
+# Mock database manager for testing
+class DatabaseManager:
+    def _get_connection(self):
+        class Connection:
+            def __enter__(self):
+                return self
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                pass
+        return Connection()
 
 # Initialize database manager
 db_manager = DatabaseManager()

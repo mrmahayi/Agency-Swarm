@@ -1,6 +1,6 @@
 from agency_swarm.tools import BaseTool
 from pydantic import Field
-import azure.cognitiveservices.speech as speechsdk
+from azure.cognitiveservices.speech import SpeechConfig, SpeechSynthesizer, ResultReason, CancellationDetails, CancellationReason, audio, ServicePropertyChannel
 import os
 from dotenv import load_dotenv
 import time
@@ -45,7 +45,7 @@ class SpeechTool(BaseTool):
         
         try:
             # Configure speech service
-            speech_config = speechsdk.SpeechConfig(
+            speech_config = SpeechConfig(
                 subscription=speech_key, 
                 region=service_region
             )
@@ -57,15 +57,15 @@ class SpeechTool(BaseTool):
             speech_config.set_service_property(
                 name="endpoint",
                 value=endpoint_url,
-                channel=speechsdk.ServicePropertyChannel.UriQueryParameter
+                channel=ServicePropertyChannel.UriQueryParameter
             )
             
             speech_config.speech_synthesis_voice_name = self.voice_name
             print(f"Using voice: {self.voice_name}")
             
             # Create speech synthesizer with default speaker output
-            audio_config = speechsdk.audio.AudioOutputConfig(use_default_speaker=True)
-            speech_synthesizer = speechsdk.SpeechSynthesizer(
+            audio_config = audio.AudioOutputConfig(use_default_speaker=True)
+            speech_synthesizer = SpeechSynthesizer(
                 speech_config=speech_config,
                 audio_config=audio_config
             )
@@ -73,11 +73,11 @@ class SpeechTool(BaseTool):
             # Synthesize text to speech
             result = speech_synthesizer.speak_text_async(self.text).get()
             
-            if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
+            if result.reason == ResultReason.SynthesizingAudioCompleted:
                 return f"Successfully synthesized speech for text: {self.text[:50]}..."
-            elif result.reason == speechsdk.ResultReason.Canceled:
-                cancellation_details = speechsdk.CancellationDetails(result)
-                if cancellation_details.reason == speechsdk.CancellationReason.Error:
+            elif result.reason == ResultReason.Canceled:
+                cancellation_details = CancellationDetails(result)
+                if cancellation_details.reason == CancellationReason.Error:
                     return f"Speech synthesis canceled due to error. Error details: {cancellation_details.error_details}"
                 else:
                     return f"Speech synthesis canceled. Reason: {cancellation_details.reason}"

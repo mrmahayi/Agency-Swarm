@@ -1,7 +1,7 @@
 from agency_swarm.tools import BaseTool
 from pydantic import Field
 from playwright.sync_api import sync_playwright
-import PyPDF2
+import pypdf
 import os
 from io import BytesIO
 
@@ -60,7 +60,7 @@ class PDFTool(BaseTool):
                 
                 with open(self.url_or_file, 'rb') as file:
                     # Create PDF reader object
-                    pdf_reader = PyPDF2.PdfReader(file)
+                    pdf_reader = pypdf.PdfReader(file)
                     
                     # Extract text from all pages
                     text = ""
