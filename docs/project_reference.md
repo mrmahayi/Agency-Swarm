@@ -1,56 +1,11 @@
 # Agency-Swarm Project Reference
 
-## IMPORTANT NOTE - AGENCY SWARM STRUCTURE
-This project MUST follow the Agency Swarm framework structure while maintaining its functionality:
-
-1. Required Structure:
-   ```
-   project_root/
-   ├── main.py (renamed from agency.py)
-   ├── requirements.txt
-   ├── .env
-   ├── .gitignore
-   ├── README.md
-   └── agents/
-       ├── __init__.py
-       └── [agent_folders]/
-           ├── __init__.py
-           ├── agent.py
-           ├── instructions.md
-           └── tools/
-               ├── __init__.py
-               └── [agent_tools].py
-   ```
-
-2. Tool Implementation Rules:
-   - Each tool must inherit from `BaseTool`
-   - Include proper docstrings
-   - Define fields using pydantic
-   - Implement the `run` method
-
-3. Data Management:
-   - Tools should handle their own data persistence
-   - Avoid creating separate data directories
-   - Use tool-specific storage methods
-
-4. Current Refactoring Needs:
-   - Rename `agency.py` to `main.py`
-   - Move global tools into respective agent folders
-   - Integrate infrastructure features into agent tools
-   - Clean up root directory
-
-## IMPORTANT NOTE - EXISTING SETUP
-This project already has a complete setup with all necessary agents and tools. Before creating any new components:
-1. Check the existing structure in `/agents` and `/tools` directories
-2. Review the existing implementations
-3. Modify existing components rather than creating duplicates
-4. Follow the established patterns and conventions
-
 ## Project Overview
-This is an advanced AI agent system built using the Agency-Swarm framework, designed to handle complex tasks through multiple specialized agents working in collaboration.
+This is an advanced AI agent system with a modern React frontend, built using the Agency-Swarm framework and designed to handle complex tasks through multiple specialized agents working in collaboration.
 
 ## Environment Setup
-Required environment variables (.env):
+
+### Backend Environment (.env)
 ```
 AZURE_OPENAI_KEY=your_api_key
 AZURE_OPENAI_ENDPOINT=your_endpoint
@@ -58,411 +13,528 @@ AZURE_OPENAI_API_VERSION=2024-08-01-preview
 AZURE_OPENAI_GPT4O_DEPLOYMENT=gpt-4o
 ```
 
+### Frontend Environment (.env)
+```
+VITE_API_URL=your_backend_url
+VITE_WS_URL=your_websocket_url
+```
+
 ## Project Structure
 
+```
+Agency-Swarm/
+├── frontend/                # Frontend application
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   │   ├── agents/    # Agent-specific components
+│   │   │   ├── results/   # Result display components
+│   │   │   ├── AgentCard.tsx
+│   │   │   ├── CommandInput.tsx
+│   │   │   ├── Header.tsx
+│   │   │   ├── Logo.tsx
+│   │   │   ├── ResultsDisplay.tsx
+│   │   │   └── ThemeToggle.tsx
+│   │   ├── data/          # Data models and constants
+│   │   ├── types/         # TypeScript definitions
+│   │   ├── utils/         # Utility functions
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── public/            # Static assets
+│   ├── index.html
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── vite.config.ts
+│
+├── backend/               # Backend application
+│   ├── agents/           # Agent implementations
+│   │   ├── TaskOrchestrator/
+│   │   │   ├── __init__.py
+│   │   │   ├── agent.py
+│   │   │   ├── instructions.md
+│   │   │   └── tools/
+│   │   ├── Research/
+│   │   ├── WebAutomation/
+│   │   ├── VisionAnalysis/
+│   │   └── DesktopInteraction/
+│   │
+│   ├── api/              # API endpoints
+│   │   ├── __init__.py
+│   │   ├── routes.py
+│   │   └── websockets.py
+│   │
+│   ├── database/         # Database related code
+│   │   ├── __init__.py
+│   │   ├── models.py
+│   │   └── manager.py
+│   │
+│   ├── monitoring/       # Monitoring configuration
+│   │   ├── __init__.py
+│   │   ├── metrics.py
+│   │   └── alerts.py
+│   │
+│   ├── security/        # Security configuration
+│   │   ├── __init__.py
+│   │   └── auth.py
+│   │
+│   ├── utils/          # Utility functions
+│   │   ├── __init__.py
+│   │   └── helpers.py
+│   │
+│   └── main.py         # Main application entry
+│
+├── tests/              # Test suite
+│   ├── frontend/      # Frontend tests
+│   │   ├── components/
+│   │   └── integration/
+│   │
+│   ├── backend/       # Backend tests
+│   │   ├── agents/
+│   │   ├── tools/
+│   │   └── integration/
+│   │
+│   └── e2e/          # End-to-end tests
+│
+├── docs/             # Documentation
+│   ├── frontend/
+│   ├── backend/
+│   └── api/
+│
+└── docker/          # Docker configuration
+    ├── frontend/
+    └── backend/
+```
+
+## Frontend Components
+
 ### Core Components
-- `agency.py` - Main agency configuration and initialization
-- `config.py` - Configuration settings
-- `requirements.txt` - Project dependencies
-- `agency_manifesto.md` - Shared instructions for all agents
-- `agency_data.db` - Database file
-- `start_agency.sh` - Startup script
+1. **AgentCard**
+   - Displays agent status and controls
+   - Real-time updates via WebSocket
+   - Action buttons for agent control
 
-### Key Directories
-1. `/agents` - Contains all agent implementations
-   - TaskOrchestrator/
-   - Research/
-   - WebAutomation/
-   - VisionAnalysis/
-   - DesktopInteraction/
+2. **CommandInput**
+   - Natural language command interface
+   - Command history and suggestions
+   - Auto-complete functionality
 
-2. `/database` - Database related code
-3. `/monitoring` - Monitoring and metrics
-4. `/security` - Security and authentication
-5. `/utils` - Utility functions
-6. `/tests` - Test suite
-7. `/backups` - Backup files
-8. `/visualizations` - Visualization outputs
-9. `/tools` - Global tools available to all agents
+3. **ResultsDisplay**
+   - Multi-format result visualization
+   - Support for text, images, and web content
+   - Export capabilities
 
-### Agent Structure
-Each agent directory follows this structure:
+4. **ThemeToggle**
+   - Light/dark mode switching
+   - Theme persistence
+   - System preference detection
+
+### State Management
+- React Context for global state
+- Local state for component-specific data
+- WebSocket for real-time updates
+
+## Backend Components
+
+### Core Agents
+
+1. **TaskOrchestrator**
+   - Main orchestrator agent
+   - Task distribution and coordination
+   - Communication management
+
+2. **Research Agent**
+   - Information gathering
+   - Web search capabilities
+   - Data analysis
+
+3. **WebAutomation Agent**
+   - Browser automation
+   - Web scraping
+   - Form interaction
+
+4. **VisionAnalysis Agent**
+   - Image processing
+   - OCR capabilities
+   - Visual analysis
+
+5. **DesktopInteraction Agent**
+   - System automation
+   - File operations
+   - UI interaction
+
+### Available Tools
+
+1. **Vision & Media**
+   - AzureVisionTool
+   - CameraTool
+   - ScreenshotTool
+
+2. **System Interaction**
+   - ClipboardTool
+   - ClickTool
+   - KeyboardTool
+
+3. **Speech & Audio**
+   - SpeechToTextTool
+   - TextToSpeechTool
+
+4. **Browser & Research**
+   - BrowserTool
+   - TavilySearchTool
+
+## API Integration
+
+### REST Endpoints
 ```
-agent_name/
-├── __init__.py
-├── agent_name.py
-├── instructions.md
-└── tools/
-    └── [agent specific tools]
+POST /api/command       # Submit new command
+GET  /api/agents        # Get agent status
+GET  /api/results       # Get task results
+POST /api/upload        # Upload files
 ```
 
-## Available Tools
-
-### Global Tools
-1. **Task Management**
-   - TaskManagementTool.py
-   - TaskAnalyticsTool.py
-   - MessageAnalyticsTool.py
-
-2. **Communication & Browser**
-   - CommunicationTool.py
-   - TavilySearchTool.py
-   - BrowserTool.py
-
-3. **Document & File Handling**
-   - PDFTool.py
-   - FileManagementTool.py
-   - VisualizationTool.py
-
-4. **Vision & Media**
-   - AzureVisionTool.py
-   - CameraTool.py
-   - ScreenshotTool.py
-
-5. **System Interaction**
-   - ClipboardTool.py
-   - ClickTool.py
-   - KeyboardTool.py
-
-6. **Speech & Audio**
-   - SpeechToTextTool.py
-   - SpeechTool.py
-
-7. **Database**
-   - database_manager.py
-
-### Agent-Specific Tools
-
-#### TaskOrchestrator
-- TaskContextManager.py
-- CommunicationTool.py
-- UpdateBatcher.py
+### WebSocket Events
+```
+agent_status    # Real-time agent status updates
+task_progress   # Task progress notifications
+command_result  # Command execution results
+error_event     # Error notifications
+```
 
 ## Dependencies
 
-### Core Dependencies
-- agency-swarm (v0.4.2)
-- openai (≥1.55.3)
-- python-dotenv (1.0.1)
-- httpx (0.26.0)
+### Frontend Dependencies
+```json
+{
+  "dependencies": {
+    // UI Components & Styling
+    "@headlessui/react": "^1.7.18",    // Accessible UI components
+    "@heroicons/react": "^2.1.1",      // Icon set
+    "@tailwindcss/forms": "^0.5.7",    // Form styling
+    "framer-motion": "^10.18.0",       // Animations
+    "tailwindcss-animate": "^1.0.7",   // Animation utilities
 
-### Document Processing
-- pdfkit (1.0.0)
-- PyPDF2 (3.0.1)
-- wkhtmltopdf (0.2)
+    // State Management & Data Fetching
+    "react-query": "^3.39.3",          // Server state management
+    "zustand": "^4.4.7",               // Client state management
+    "socket.io-client": "^4.7.4",      // WebSocket client
+    "axios": "^1.6.5",                 // HTTP client
 
-### Web & Automation
-- playwright (1.41.2)
+    // Forms & Validation
+    "react-hook-form": "^7.49.3",      // Form handling
+    "zod": "^3.22.4",                  // Schema validation
 
-### Data & Visualization
-- plotly (5.24.1)
-- pandas (2.2.3)
-- numpy (2.2.1)
+    // Routing & Navigation
+    "react-router-dom": "^6.21.2",     // Client-side routing
 
-### Speech & Vision
-- azure-cognitiveservices-speech (1.35.0)
+    // Utilities
+    "date-fns": "^3.2.0",             // Date manipulation
+    "clsx": "^2.1.0",                 // Class utilities
+    "tailwind-merge": "^2.2.0",       // Tailwind class merging
+    "react-error-boundary": "^4.0.12", // Error handling
+    "react-hot-toast": "^2.4.1"       // Toast notifications
+  }
+}
+```
 
-### Monitoring & Logging
-- python-logging (0.4.9.6)
-- prometheus-client (0.17.1)
+### Backend Dependencies
+```
+agency-swarm==0.4.2
+openai>=1.55.3
+python-dotenv==1.0.1
+httpx==0.26.0
+fastapi==0.109.0
+websockets==12.0
+```
 
-### Testing
-- pytest (7.4.3)
-- pytest-cov (4.1.0)
+## Development Setup
 
-### Server
-- gunicorn (21.2.0)
-
-### Additional Dependencies
-- pyautogui (for desktop automation)
-- pillow (for image processing)
-- opencv-python (for camera operations)
-- pyperclip (for clipboard operations)
-- keyboard (for keyboard control)
-- mouse (for mouse control)
-
-## Available Agents
-
-### 1. TaskOrchestrator
-- Main orchestrator agent
-- Manages task distribution and coordination
-- Entry point for user communication
-- Custom tools for task context and updates
-
-### 2. Research Agent
-- Handles research-related tasks
-- Information gathering and analysis
-- Uses TavilySearchTool and BrowserTool
-
-### 3. WebAutomation Agent
-- Web scraping and automation
-- Browser interaction tasks
-- Utilizes Playwright for automation
-
-### 4. VisionAnalysis Agent
-- Image processing and analysis
-- Visual data interpretation
-- Uses AzureVisionTool and CameraTool
-
-### 5. DesktopInteraction Agent
-- Desktop automation tasks
-- System interaction capabilities
-- Uses ClickTool, KeyboardTool, and ScreenshotTool
-
-## Infrastructure Features
-1. **Monitoring**
-   - Prometheus metrics integration
-   - Health monitoring for agents
-   - API request tracking
-
-2. **Security**
-   - Token-based authentication
-   - Rate limiting
-   - Security manager implementation
-
-3. **Database**
-   - SQLite database integration
-   - Connection management
-   - Data persistence
-
-4. **Backup System**
-   - Automated backup creation
-   - Backup management utilities
-
-5. **Logging**
-   - Comprehensive logging configuration
-   - Error tracking and alerting
-
-## Starting the Project
-1. Ensure all environment variables are set in `.env`
-2. Install dependencies: `pip install -r requirements.txt`
-3. Install additional system dependencies:
+### Frontend Setup
    ```bash
-   # For PDF processing
-   apt-get install wkhtmltopdf
+cd frontend
+npm install
+npm run dev
+```
 
-   # For desktop automation
-   apt-get install python3-tk python3-dev
-   
-   # For camera operations
-   apt-get install libopencv-dev
-   ```
-4. Run the agency: `python agency.py` or `./start_agency.sh`
-
-## Development Guidelines
-1. All new agents should follow the established directory structure
-2. Add new dependencies to requirements.txt
-3. Update tests for new functionality
-4. Follow the monitoring and logging patterns
-5. Implement proper error handling and rate limiting
-6. Use the backup system for critical operations
+### Backend Setup
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+pip install -r requirements.txt
+python main.py
+```
 
 ## Testing
-- Run tests using pytest: `pytest tests/`
-- Test coverage tracking enabled
-- CI/CD integration via GitHub Actions
 
-## Monitoring and Maintenance
-- Monitor agent health via Prometheus metrics
-- Check logs for errors and warnings
-- Regular backup verification
-- API rate limit monitoring 
-
-## Complete Project Structure
+### Frontend Testing
+```bash
+cd frontend
+npm run test        # Unit tests
+npm run test:e2e    # E2E tests
 ```
-Agency-Swarm/
-├── .env                        # Environment variables
-├── .env.template              # Template for environment variables
-├── .gitignore                 # Git ignore rules
-├── __init__.py               # Package initialization
-├── agency.py                 # Main agency file
-├── agency_data.db            # SQLite database
-├── agency_manifesto.md       # Shared instructions for agents
-├── assistant.txt             # Assistant configuration
-├── best_camera_settings.json # Camera settings
-├── camera_config.json        # Camera configuration
-├── config.py                 # Configuration settings
-├── Dockerfile                # Docker configuration
-├── env_example.txt          # Example environment file
-├── maestro.txt              # Maestro configuration
-├── project_plan.md          # Project planning document
-├── project_reference.md     # This reference document
-├── requirements.txt         # Python dependencies
-├── settings.json            # Project settings
-├── start_agency.sh         # Startup script
-├── test.pdf                # Test PDF file
-├── test_screenshot.png     # Test screenshot
-├── wkhtmltopdf.exe        # PDF generation binary
 
-├── .github/                # GitHub configuration
-│   └── workflows/         # GitHub Actions workflows
+### Backend Testing
+```bash
+cd backend
+pytest tests/       # All tests
+pytest tests/agents # Agent tests only
+```
 
-├── .venv/                 # Virtual environment (not tracked)
+## Security Considerations
 
-├── agents/                # Agent implementations
-│   ├── TaskOrchestrator/
-│   │   ├── __init__.py
-│   │   ├── task_orchestrator_agent.py
-│   │   ├── instructions.md
-│   │   └── tools/
-│   │       ├── TaskContextManager.py
-│   │       ├── CommunicationTool.py
-│   │       └── UpdateBatcher.py
-│   ├── Research/
-│   ├── WebAutomation/
-│   ├── VisionAnalysis/
-│   └── DesktopInteraction/
+1. **Authentication**
+   - JWT-based authentication
+   - API key management
+   - Session handling
 
-├── backups/              # Backup files directory
+2. **Data Protection**
+   - Input sanitization
+   - XSS prevention
+   - CSRF protection
 
-├── camera_captures/      # Camera capture storage
-├── camera_tests/        # Camera test files
+3. **API Security**
+   - Rate limiting
+   - Request validation
+   - Error handling
 
-├── data/                # Data storage directory
+## Deployment
 
-├── database/           # Database related code
-│   ├── __init__.py
-│   ├── db.py
-│   └── models/
+### Frontend Deployment
+- Build optimization
+- Asset compression
+- CDN integration
+- Docker containerization
 
-├── logs/              # Log files directory
+### Backend Deployment
+- Environment configuration
+- Database setup
+- WebSocket setup
+- Docker containerization
 
-├── messages/          # Message storage
+## Monitoring
 
-├── monitoring/        # Monitoring configuration
-│   ├── __init__.py
-│   ├── metrics.py
-│   └── alerts.py
+1. **Frontend Monitoring**
+   - Performance metrics
+   - Error tracking
+   - User analytics
 
-├── pdf_images/        # PDF-related images
+2. **Backend Monitoring**
+   - Agent status
+   - System resources
+   - API metrics
+   - Error logging
 
-├── screenshots/       # Screenshot storage
+## Documentation
 
-├── security/         # Security configuration
-│   ├── __init__.py
-│   └── auth.py
+### API Documentation
+- OpenAPI/Swagger documentation
+- WebSocket event documentation
+- Authentication flows
+- Error codes
 
-├── task_contexts/    # Task context storage
+### Component Documentation
+- Component props
+- State management
+- Event handling
+- Styling guide
 
-├── temp/            # Temporary files
+## Best Practices
 
-├── tests/           # Test suite
-│   ├── __init__.py
-│   └── test_*.py
+### Frontend Best Practices
+1. Use TypeScript for type safety
+2. Follow React hooks guidelines
+3. Implement proper error boundaries
+4. Optimize bundle size
+5. Follow accessibility guidelines
 
-├── tools/           # Global tools
-│   ├── __init__.py
-│   ├── TaskManagementTool.py
-│   ├── TaskAnalyticsTool.py
-│   ├── MessageAnalyticsTool.py
-│   ├── CommunicationTool.py
-│   ├── TavilySearchTool.py
-│   ├── BrowserTool.py
-│   ├── PDFTool.py
-│   ├── FileManagementTool.py
-│   ├── VisualizationTool.py
-│   ├── AzureVisionTool.py
-│   ├── CameraTool.py
-│   ├── ScreenshotTool.py
-│   ├── ClipboardTool.py
-│   ├── ClickTool.py
-│   ├── KeyboardTool.py
-│   ├── SpeechToTextTool.py
-│   ├── SpeechTool.py
-│   ├── database_manager.py
-│   └── ExampleTool.py
+### Backend Best Practices
+1. Follow Agency Swarm patterns
+2. Implement proper logging
+3. Handle errors gracefully
+4. Document API endpoints
+5. Maintain test coverage
 
-├── updates/         # Update storage
+## Maintenance
 
-├── utils/          # Utility functions
-│   ├── __init__.py
-│   ├── rate_limiter.py
-│   └── backup.py
+### Regular Tasks
+1. Dependency updates
+2. Security patches
+3. Performance monitoring
+4. Documentation updates
 
-└── visualizations/ # Visualization outputs
-``` 
+### Backup Procedures
+1. Database backups
+2. Configuration backups
+3. User data protection
+4. Version control
 
-# Project Structure
+## Frontend Stack
 
-The project follows the Agency Swarm framework structure:
+### Core Technologies
+1. **Framework & UI**
+   - React 18 with TypeScript
+   - TailwindCSS for styling
+   - HeadlessUI for accessible components
+   - Framer Motion for animations
+   - HeroIcons for iconography
 
-## Core Directories
+2. **State Management & Data Fetching**
+   - Zustand for global state
+   - React Query for server state
+   - Socket.IO for real-time updates
+   - React Hook Form for form management
+   - Zod for schema validation
 
-### /agency
-- `main.py` - Main entry point for the agency
-- `agency_manifesto.md` - Shared instructions for all agents
-- `config.py` - Configuration settings
+3. **Development Tools**
+   - Vite for build tooling
+   - TypeScript for type safety
+   - ESLint & Prettier for code quality
+   - Vitest for unit testing
+   - Cypress for E2E testing
 
-### /agents
-Each agent has its own directory with the following structure:
-- `agent.py` - Agent class definition
-- `instructions.md` - Agent-specific instructions
-- `/tools` - Agent-specific tools
-  - Tool implementation files
-  - `__init__.py`
+### Frontend Dependencies
 
-Current agents:
-1. TaskOrchestrator
-   - Tools: TaskContextManager, CommunicationTool, UpdateBatcher, TaskManagementTool, TaskAnalyticsTool, MessageAnalyticsTool
-2. Research
-   - Tools: TavilySearchTool, BrowserTool, PDFTool, FileManagementTool
-3. WebAutomation
-   - Tools: BrowserTool, FileManagementTool
-4. VisionAnalysis
-   - Tools: AzureVisionTool, CameraTool, VisualizationTool, ScreenshotTool, SpeechTool, SpeechToTextTool
-5. DesktopInteraction
-   - Tools: ClipboardTool, ClickTool, KeyboardTool
+```json
+{
+  "dependencies": {
+    // UI Components & Styling
+    "@headlessui/react": "^1.7.18",    // Accessible UI components
+    "@heroicons/react": "^2.1.1",      // Icon set
+    "@tailwindcss/forms": "^0.5.7",    // Form styling
+    "framer-motion": "^10.18.0",       // Animations
+    "tailwindcss-animate": "^1.0.7",   // Animation utilities
 
-### /data
-- Contains persistent data storage (e.g. agency.db)
+    // State Management & Data Fetching
+    "react-query": "^3.39.3",          // Server state management
+    "zustand": "^4.4.7",               // Client state management
+    "socket.io-client": "^4.7.4",      // WebSocket client
+    "axios": "^1.6.5",                 // HTTP client
 
-### /docs
-- Documentation files
-- `project_reference.md` - This file
-- `swarm-docs.md` - Additional documentation
+    // Forms & Validation
+    "react-hook-form": "^7.49.3",      // Form handling
+    "zod": "^3.22.4",                  // Schema validation
 
-### /tests
-- Test files for various components
+    // Routing & Navigation
+    "react-router-dom": "^6.21.2",     // Client-side routing
 
-### Root Directory Files
-- `.env` - Environment variables
-- `requirements.txt` - Python dependencies
+    // Utilities
+    "date-fns": "^3.2.0",             // Date manipulation
+    "clsx": "^2.1.0",                 // Class utilities
+    "tailwind-merge": "^2.2.0",       // Tailwind class merging
+    "react-error-boundary": "^4.0.12", // Error handling
+    "react-hot-toast": "^2.4.1"       // Toast notifications
+  }
+}
+```
 
-## Data Storage
-- Persistent data is stored in `/data/agency.db`
-- Temporary files are stored in `.agency/` hidden directory
+### Development Scripts
+```bash
+# Development
+npm run dev          # Start development server
 
-## Important Notes
+# Building
+npm run build        # Production build
+npm run preview      # Preview production build
 
-1. Agency Swarm Structure Guidelines:
-   - Each agent must have its own directory under `/agents`
-   - All tools must be in the agent's `/tools` directory
-   - Each agent must have `agent.py` and `instructions.md`
-   - Main agency code must be in `/agency/main.py`
+# Testing
+npm run test         # Run tests in watch mode
+npm run test:unit    # Run unit tests
+npm run test:e2e     # Run end-to-end tests
+npm run test:coverage # Run tests with coverage
 
-2. Tool Implementation Rules:
-   - Tools should be self-contained in their respective agent directories
-   - Tools should follow the BaseTool pattern
-   - Tools should handle their own data storage needs
+# Linting
+npm run lint         # Lint code
+```
 
-3. Data Management:
-   - Use SQLite database in `/data` for persistent storage
-   - Use `.agency/` for temporary files
-   - Clean up temporary files regularly
+### Frontend Features
 
-4. Testing:
-   - Keep all tests in `/tests` directory
-   - Each major component should have corresponding tests
+1. **Component Architecture**
+   - Functional components with hooks
+   - TypeScript for type safety
+   - Modular and reusable design
+   - Accessible by default (ARIA)
 
-5. Documentation:
-   - Keep all documentation in `/docs`
-   - Update this reference when making structural changes
+2. **State Management**
+   - Zustand for simple global state
+   - React Query for server cache
+   - Context for theme/auth
+   - Local state with useState
 
-## Recyclebin
-The `/Recyclebin` directory contains files and directories that were part of the old structure and are kept for reference. These include:
-- Configuration files
-- Utility scripts
-- Old monitoring and database implementations
-- Test files and backups
+3. **Real-time Updates**
+   - WebSocket integration
+   - Live agent status
+   - Task progress tracking
+   - Instant notifications
 
-These files can be safely removed once their functionality has been properly integrated into the new structure.
+4. **Form Handling**
+   - React Hook Form integration
+   - Zod schema validation
+   - Error handling
+   - Accessibility features
+
+5. **Styling System**
+   - TailwindCSS utilities
+   - Dark/light theme
+   - Responsive design
+   - Custom animations
+
+6. **Testing Strategy**
+   - Unit tests with Vitest
+   - Component testing with Testing Library
+   - E2E tests with Cypress
+   - Coverage reporting
+
+### Development Workflow
+
+1. **Setup**
+   ```bash
+   git clone <repository>
+   cd frontend
+   npm install
+   ```
+
+2. **Development**
+   ```bash
+   # Start development server
+   npm run dev
+
+   # Run tests in watch mode
+   npm run test
+
+   # Lint code
+   npm run lint
+   ```
+
+3. **Production**
+   ```bash
+   # Build for production
+   npm run build
+
+   # Preview production build
+   npm run preview
+   ```
+
+### Best Practices
+
+1. **Component Development**
+   - Use TypeScript for all components
+   - Follow React hooks guidelines
+   - Implement error boundaries
+   - Maintain accessibility
+
+2. **State Management**
+   - Use Zustand for global state
+   - React Query for API data
+   - Local state when possible
+   - Context for theme/auth
+
+3. **Testing**
+   - Write tests for all components
+   - Maintain high coverage
+   - Test user interactions
+   - Mock external services
+
+4. **Performance**
+   - Lazy load components
+   - Optimize images
+   - Minimize bundle size
+   - Cache API responses
