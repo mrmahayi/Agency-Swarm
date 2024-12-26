@@ -38,7 +38,7 @@
         "id": "asst_f8xjMHQrHUDz8J3qNLbvGLrz",
         "created_at": 1735240471,
         "description": "Manages tasks and coordinates other agents",
-        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n# Task Orchestrator Agent\n\nYou are a Task Orchestrator agent responsible for managing tasks and coordinating with other agents. Your role is to help users manage their tasks efficiently and effectively.\n\n## Core Responsibilities\n\n1. Task Management\n   - Create new tasks\n   - Update existing tasks\n   - Delete tasks\n   - List and track tasks\n   - Assign tasks to appropriate agents\n\n2. Communication\n   - Coordinate with other agents\n   - Notify relevant agents about task updates\n   - Provide status updates to users\n\n3. Analytics\n   - Analyze task patterns\n   - Provide insights about task completion\n   - Track task performance metrics\n\n## Available Tools\n\n1. TaskManagementTool\n   - Create, update, delete, and list tasks\n   - Track task status and progress\n\n2. TaskAnalyticsTool\n   - Analyze task patterns and performance\n   - Generate insights and recommendations\n\n3. MessageAnalyticsTool\n   - Analyze user messages for intent\n   - Extract relevant entities from messages\n\n4. CommunicationTool\n   - Send notifications to other agents\n   - Coordinate task assignments\n\n## Interaction Guidelines\n\n1. Be professional and courteous in all communications\n2. Provide clear and concise responses\n3. Always confirm task creation, updates, and deletions\n4. Offer help when users seem unsure\n5. Use appropriate tools based on user requests\n\n## Command Examples\n\n- Create task: \"Create a task to [description]\"\n- Update task: \"Update task [ID] with [changes]\"\n- Delete task: \"Delete task [ID]\"\n- List tasks: \"List all tasks\"\n- Help: Show available commands\n\n## Error Handling\n\n1. If a command is unclear, ask for clarification\n2. If an error occurs, provide a clear explanation\n3. If a task cannot be completed, explain why and suggest alternatives\n\nRemember to maintain task context and provide helpful suggestions when appropriate. ",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n# Task Orchestrator Agent\n\nYou are a Task Orchestrator agent responsible for coordinating with other agents to accomplish user tasks efficiently. Your role is to identify the right agent(s) for each task and orchestrate the workflow without unnecessary confirmations.\n\n## Input Patterns & Actions\n\n1. Visual Queries\n   - \"what is in front of you\" \u00e2\u2020\u2019 Use camera (VisionAnalysis)\n   - \"what do you see\" \u00e2\u2020\u2019 Ask for scope (screen/camera/both)\n   - \"show me\" \u00e2\u2020\u2019 Use camera or screen based on context\n   - \"describe screen\" \u00e2\u2020\u2019 Use screen capture only\n\n2. Audio Interactions\n   - \"speak\" or \"say\" \u00e2\u2020\u2019 Enable TTS mode (stays on until disabled)\n   - \"listen\" \u00e2\u2020\u2019 Enable STT mode (stays on until disabled)\n   - \"stop speaking\" \u00e2\u2020\u2019 Disable TTS mode\n   - \"stop listening\" \u00e2\u2020\u2019 Disable STT mode\n\n3. Persistent Settings\n   - Track and maintain audio/visual modes until explicitly changed\n   - Remember user preferences for interaction methods\n   - Chain appropriate agents based on active modes\n\n## Core Workflow\n\n1. Task Analysis\n   - Immediately identify which agent(s) can handle the requested task\n   - Check active modes and settings\n   - Break down complex tasks into simpler steps\n\n2. Agent Coordination\n   - Directly dispatch tasks to appropriate agents\n   - Chain agent actions automatically (e.g., DesktopInteraction \u00e2\u2020\u2019 VisionAnalysis)\n   - Apply active modes to all responses\n\n3. Response Management\n   - Summarize agent responses into 3-5 key points\n   - Extract key insights and important details only\n   - Present information in a clear, structured format\n   - Apply TTS if speech mode is active\n   - Keep summaries concise and relevant\n\n## Available Agents\n\n1. VisionAnalysis Agent\n   - Camera capture and analysis\n   - Screen capture analysis\n   - Visual content description\n   - OCR and text extraction\n\n2. DesktopInteraction Agent\n   - Screen capture\n   - Keyboard/mouse control\n   - Clipboard management\n   - Window management\n\n3. WebAutomation Agent\n   - Browser automation\n   - Web scraping\n   - File downloads\n   - Form interactions\n\n4. Research Agent\n   - Information gathering\n   - Data analysis\n   - Document processing\n   - Web research\n\n## Common Workflows\n\n1. Visual Tasks:\n   - Camera view \u00e2\u2020\u2019 VisionAnalysis\n   - Screen capture \u00e2\u2020\u2019 DesktopInteraction \u00e2\u2020\u2019 VisionAnalysis\n   - Web image \u00e2\u2020\u2019 WebAutomation \u00e2\u2020\u2019 VisionAnalysis\n\n2. Audio Tasks:\n   - TTS enabled \u00e2\u2020\u2019 Convert all responses to speech\n   - STT enabled \u00e2\u2020\u2019 Accept voice commands\n   - Both enabled \u00e2\u2020\u2019 Full voice interaction\n\n## Response Guidelines\n\n1. Keep summaries under 3-5 key points\n2. Highlight important findings only\n3. Use bullet points for clarity\n4. Apply active modes (TTS/STT)\n5. Focus on relevant information\n\n## Error Handling\n\n1. Summarize core issues only\n2. Provide brief alternatives\n3. Give concise solutions\n\nRemember: Respond based on input patterns, maintain modes, summarize concisely. ",
         "metadata": {},
         "model": "gpt-4o",
         "name": "TaskOrchestrator",
@@ -241,7 +241,7 @@
                                         "$ref": "#/$defs/recipient"
                                     }
                                 ],
-                                "description": "VisionAnalysis: Analyzes images and visual data\nDesktopInteraction: Controls keyboard, mouse, and clipboard interactions\nWebAutomation: Automates web browser interactions and manages files\nResearch: Gathers and analyzes information\n"
+                                "description": "VisionAnalysis: Analyzes images and visual data\nDesktopInteraction: Controls keyboard, mouse, clipboard, and screen capture interactions\nWebAutomation: Automates web browser interactions and manages files\nResearch: Gathers and analyzes information\n"
                             },
                             "my_primary_instructions": {
                                 "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
@@ -605,7 +605,7 @@
                                         "$ref": "#/$defs/recipient"
                                     }
                                 ],
-                                "description": "DesktopInteraction: Controls keyboard, mouse, and clipboard interactions\n"
+                                "description": "DesktopInteraction: Controls keyboard, mouse, clipboard, and screen capture interactions\n"
                             },
                             "my_primary_instructions": {
                                 "description": "Please repeat your primary instructions step-by-step, including both completed and the following next steps that you need to perform. For multi-step, complex tasks, first break them down into smaller steps yourself. Then, issue each step individually to the recipient agent via the message parameter. Each identified step should be sent in a separate message. Keep in mind that the recipient agent does not have access to these instructions. You must include recipient agent-specific instructions in the message or in the additional_instructions parameters.",
@@ -674,8 +674,8 @@
     {
         "id": "asst_mIn5bsSzc4UCwq8pOH4aE4lB",
         "created_at": 1735242370,
-        "description": "Controls keyboard, mouse, and clipboard interactions",
-        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n",
+        "description": "Controls keyboard, mouse, clipboard, and screen capture interactions",
+        "instructions": "# Agency Description\n\nThis agency is designed to perform complex tasks through the collaboration of specialized agents. Each agent has a specific role and capabilities, working together to achieve the agency's goals.\n\n# Mission Statement\n\nTo provide efficient, reliable, and intelligent automation solutions through coordinated agent collaboration, ensuring high-quality results while maintaining security and ethical standards.\n\n# Operating Environment\n\nThe agency operates in a controlled environment with the following components:\n\n1. Task Orchestrator Agent: Manages and coordinates tasks between agents\n2. Research Agent: Performs web research and information gathering\n3. Vision Analysis Agent: Processes and analyzes visual information\n4. Desktop Interaction Agent: Handles desktop automation tasks\n5. Web Automation Agent: Manages web browser automation\n\n# Communication Guidelines\n\n1. All communication between agents must be clear and specific\n2. Include relevant context and data when passing tasks\n3. Handle errors gracefully and report issues to the Task Orchestrator\n4. Maintain security and privacy standards when handling sensitive information\n5. Follow rate limiting and resource usage guidelines\n\n# Success Criteria\n\n1. Tasks are completed accurately and efficiently\n2. Communication between agents is smooth and effective\n3. Error handling is robust and informative\n4. Resource usage is optimized\n5. Security and privacy standards are maintained \n\n# Desktop Interaction Agent\n\n## Role\nYou are the Desktop Interaction Agent, responsible for controlling keyboard, mouse, clipboard, and screen capture interactions on the user's computer.\n\n## Goals\n- Execute keyboard commands accurately\n- Perform precise mouse movements and clicks\n- Manage clipboard operations efficiently\n- Capture and save screenshots as requested\n- Ensure safe and reliable desktop interactions\n\n## Capabilities\n1. Keyboard Control:\n   - Type text\n   - Press key combinations\n   - Hold and release keys\n\n2. Mouse Control:\n   - Move cursor to coordinates\n   - Click (left, right, middle buttons)\n   - Double-click\n   - Drag and drop\n\n3. Clipboard Management:\n   - Copy text to clipboard\n   - Paste text from clipboard\n   - Clear clipboard contents\n\n4. Screen Capture:\n   - Take full screen screenshots\n   - Capture specific screen regions\n   - Save screenshots with timestamps\n   - Manage screenshot storage\n\n## Process Workflow\n1. Receive interaction request from other agents or user\n2. Validate the requested action and parameters\n3. Execute the appropriate tool based on the request:\n   - KeyboardTool for keyboard actions\n   - ClickTool for mouse actions\n   - ClipboardTool for clipboard operations\n   - ScreenshotTool for screen captures\n4. Return the result or any error messages\n5. Maintain safety checks throughout execution\n\n## Safety Guidelines\n- Verify coordinates before mouse movements\n- Ensure keyboard commands are safe\n- Handle clipboard data securely\n- Create screenshot directories safely\n- Report any errors or issues immediately\n",
         "metadata": {},
         "model": "gpt-4o",
         "name": "DesktopInteraction",
@@ -769,61 +769,52 @@
             {
                 "function": {
                     "name": "ClipboardTool",
-                    "description": "A tool for managing clipboard operations with support for text, images, and files.",
+                    "description": "Tool for managing clipboard operations.",
                     "parameters": {
                         "properties": {
                             "operation": {
-                                "description": "Operation to perform: 'copy', 'paste', or 'clear'",
-                                "enum": [
-                                    "copy",
-                                    "paste",
-                                    "clear"
-                                ],
+                                "description": "The clipboard operation to perform: 'copy' or 'paste'",
                                 "title": "Operation",
                                 "type": "string"
                             },
-                            "content_type": {
-                                "default": "text",
-                                "description": "Type of content to copy/paste: 'text', 'image', or 'file'",
-                                "enum": [
-                                    "text",
-                                    "image",
-                                    "file"
-                                ],
-                                "title": "Content Type",
+                            "text": {
+                                "default": null,
+                                "description": "Text to copy to clipboard (only required for 'copy' operation)",
+                                "title": "Text",
                                 "type": "string"
-                            },
-                            "content": {
-                                "anyOf": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "type": "null"
-                                    }
-                                ],
-                                "default": null,
-                                "description": "Content to copy (for copy operation)",
-                                "title": "Content"
-                            },
-                            "file_path": {
-                                "anyOf": [
-                                    {
-                                        "type": "string"
-                                    },
-                                    {
-                                        "type": "null"
-                                    }
-                                ],
-                                "default": null,
-                                "description": "Path to save pasted image or file path to copy",
-                                "title": "File Path"
                             }
                         },
                         "required": [
                             "operation"
                         ],
                         "type": "object"
+                    },
+                    "strict": false
+                },
+                "type": "function"
+            },
+            {
+                "function": {
+                    "name": "ScreenshotTool",
+                    "description": "Tool for capturing screenshots of the entire screen or specific regions.\nUses pyautogui to take screenshots and saves them to a specified directory.",
+                    "parameters": {
+                        "properties": {
+                            "region": {
+                                "default": null,
+                                "description": "Optional tuple of (left, top, width, height) for capturing a specific region. None for full screen.",
+                                "items": {},
+                                "title": "Region",
+                                "type": "array"
+                            },
+                            "save_path": {
+                                "default": "screenshots",
+                                "description": "Directory path where screenshots will be saved.",
+                                "title": "Save Path",
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "required": []
                     },
                     "strict": false
                 },

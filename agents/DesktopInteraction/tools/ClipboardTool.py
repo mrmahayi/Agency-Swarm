@@ -1,6 +1,8 @@
 from agency_swarm.tools import BaseTool
 from pydantic import Field
 import pyperclip
+import os
+from PIL import Image
 
 class ClipboardTool(BaseTool):
     """Tool for managing clipboard operations."""
